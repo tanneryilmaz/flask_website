@@ -1,7 +1,10 @@
 from flask import Flask
 from flask import render_template #allows you to use html templates
 from flask import url_for
+from forms import RegistrationForm, LoginForm
 app = Flask(__name__)
+
+app.config['SECRET_KEY'] = 'fd7fad7bc6cafe1f648eb630feea423c' #this is a passcode so people don't hack the website
 
 posts = [
     #This list contains the dictionaries that contain the information we want to display on our website
@@ -27,6 +30,16 @@ def hello():
 @app.route("/about") #this is the about page
 def about():
     return render_template('about.html', title = 'About') #the 'title' variable is passed to the html template
+
+@app.route("/register") #this is the form page
+def register():
+    form = RegistrationForm() #form is an instance of the RegistrationForm
+    return render_template('register.html', title='Register', form=form)
+
+@app.route("/login") #this is the form page
+def login():
+    form = LoginForm() #form is an instance of the RegistrationForm
+    return render_template('login.html', title='Login', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
