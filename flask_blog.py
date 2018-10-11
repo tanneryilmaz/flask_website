@@ -1,8 +1,43 @@
 from flask import Flask, render_template, url_for, flash, redirect
 from forms import RegistrationForm, LoginForm
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+db = SQLAlchemy(app) #we have instantiated the database
+
+class User(db.Model):
+    ''' This class defines the columns of the User table in our database'''
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    posts = db.relationship('Post', backref='author', lazy=True) #grabs posts from the posts table by a specific author
+
+    def __repr__(self):
+        '''this method defines how the object is printed'''
+        return f"User('{self.username}','{self.email}','{self.image_file}')"
+
+class Post(db.Model):
+    ''' This class represents the structure of the database'''
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    content = db.Column(db.Text, nullable=False, default='default.jpg')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) #this is the id of the user that authored a posts
+
+    def __repr__(self):
+        '''this method defines how the object is printed'''
+        return f"Post('{self.title}','{self.date_posted}')"
+
+
+
+
+
+
 
 posts = [
     {
@@ -45,7 +80,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         if form.email.data == 'admin@blog.com' and form.password.data == 'password':
-            flash('You have been logged in!', 'success')
+            flash('You have been logged in!', 'success') #'success' is a bootstrap class
             return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
