@@ -1,6 +1,7 @@
 '''this file holds the models for our database. models are basically
 templates for database objects. For example, if I want to make a User object
 in a database, I will create a model to structure the User'''
+
 from flask_blog import db, login_manager
 from datetime import datetime
 from flask_login import UserMixin
