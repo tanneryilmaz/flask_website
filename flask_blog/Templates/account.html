@@ -1,0 +1,5 @@
+{% extends "layout.html" %} <!--This page contains the information that is unique to the about.html-->
+
+{% block content%} <!--The content in this block will be injected into the block content of layout.html-->
+  <h1>{{current_user.username}}</h1>
+{% endblock %}
