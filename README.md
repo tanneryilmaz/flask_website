@@ -1,5 +1,6 @@
 # flask_website
 Notes:
+
 -Any time you want to make a new page for your website, you must add that page's route to your routes.py file. Then you must create an HTML template for
 that page in your Templates file. Then, if you want the page to have a form on it, you must create that form in the forms.py file. Then, you must import the form to your routes.py file and create an instance of the form in the route. Then, you must pass this instance into the render_template function as a parameter.
 
@@ -7,7 +8,7 @@ that page in your Templates file. Then, if you want the page to have a form on i
 {{ form.submit(class="btn btn-outline-info") }}. This will add the submit variable from the form object. The form object is an instance of the
 class which you defined in the routes.py file.
 
--Models.py is the file that holds all of your database objects.
+-models.py is the file that holds all of your database objects.
 
 -layout.html is where we define what happens when we click on a button. For example, if we click on the "new post" link in the navbar, we are
 redirected to the create_post.html page where we can create a new blog post.
