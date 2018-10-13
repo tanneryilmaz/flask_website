@@ -3,12 +3,14 @@
 {% block content%} <!--The content in this block will be injected into the block content of layout.html-->
     {%for post in posts%} <!--looping through items in 'posts' list-->
       <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
+        <!--the above image is the user's profile image. it is displayed next to their blog post-->
         <div class="media-body">
           <div class="article-metadata">
-            <a class="mr-2" href="#">{{ post.author }}</a>
-            <small class="text-muted">{{ post.date_posted }}</small>
+            <a class="mr-2" href="#">{{ post.author.username }}</a> <!--displays author's username above post-->
+            <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small> <!--displays the date of the post above post-->
           </div>
-          <h2><a class="article-title" href="#">{{ post.title }}</a></h2>
+          <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2> <!--when title of post is clicked on, we are redirected to post.html--> 
           <p class="article-content">{{ post.content }}</p>
         </div>
       </article>

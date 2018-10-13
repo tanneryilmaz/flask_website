@@ -2,29 +2,15 @@ import secrets
 import os
 from PIL import Image
 from flask_blog.models import User, Post #this line must be after we create db variable
-from flask import render_template, url_for, flash, redirect, request
-from flask_blog.forms import RegistrationForm, LoginForm, UpdateAccountForm #these forms are used in each of the different web pages
+from flask import render_template, url_for, flash, redirect, request, abort
+from flask_blog.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm #these forms are used in each of the different web pages
 from flask_blog import app, db, bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-
-posts = [
-    {
-        'author': 'Corey Schafer',
-        'title': 'Blog Post 1',
-        'content': 'First post content',
-        'date_posted': 'April 20, 2018'
-    },
-    {
-        'author': 'Jane Doe',
-        'title': 'Blog Post 2',
-        'content': 'Second post content',
-        'date_posted': 'April 21, 2018'
-    }
-]
 
 @app.route("/")
 @app.route("/home")
 def home():
+    posts = Post.query.all() #posts variable holds all of the posts from the database
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
@@ -38,7 +24,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashed_password)
+        user = User(username=form.username.data, email=form.email.data, password=hashed_password) #User() is a constructor for the User. We use this constructor to create a new instance of user in the database
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created. Please log in', 'success') #success is a bootstrap class
@@ -83,9 +69,6 @@ def save_picture(form_picture): #this method saves pictures that the user has up
     return picture_fn
 
 
-
-
-
 @app.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
@@ -97,11 +80,60 @@ def account():
             current_user.image_file = picture_file
         current_user.username = form.username.data #we are changing the current user's username in the database to whatever they entered the new username to be in the form.
         current_user.email = form.email.data
-        db.session.commit()
+        db.session.commit() #adding user to database
         flash('your account info has been updated', 'success')
-        return redirect(url_for('account')) #this line of code prevents the "post, get redirect pattern" from happening
+        return redirect(url_for('account')) #this line of code prevents the "post/get redirect pattern" from happening
     elif request.method == 'GET':
         form.username.data = current_user.username #filing in the username box in the form with the user's current username
         form.email.data = current_user.email
     image_file = url_for('static', filename='profile_pics/'+ current_user.image_file) #user's profile picture
     return render_template('account.html', title='Account', image_file=image_file, form=form) #form=form is how we pass the form object to the html page in which we want to display the form
+
+
+@app.route("/post/new", methods=['GET','POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(title=form.title.data, content=form.content.data, author=current_user) #giving information about the post to the post variable
+        db.session.add(post) #adding post to database
+        db.session.commit()  #adding post to database
+
+        flash('Your post has been created!', 'success')
+        return redirect(url_for('home')) #user is redirected to homepage if their post is successful
+    return render_template('create_post.html', title='New Post', form = form, legend = 'New Post')
+
+@app.route("/post/<int:post_id>", methods=['GET','POST']) #if user goes to url that ends with "/post/<int:post_id>", then the post with post_id = post_id is displayed
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', title=post.title, post=post)
+
+@app.route("/post/<int:post_id>/update", methods=['GET','POST'])
+@login_required #user has to be logged in to change the content of a post
+def update_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    form = PostForm()
+    if form.validate_on_submit(): #if form is valid, update the title and content of the post with whatever is in the PostForm()
+        post.title = form.title.data
+        post.content = form.content.data
+        db.session.commit()
+        flash('your post has been updated!', 'success')
+        return redirect(url_for('post', post_id=post.id)) #'post' is a method and 'post_id' is the parameter it takes in
+    elif request.method == 'GET':
+        form.title.data = post.title #the form is populated with title of the post
+        form.content.data = post.content
+    return render_template('create_post.html', title='Update Post', form=form, legend = 'Update Post')
+
+
+@app.route("/post/<int:post_id>/delete", methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('Your post has been deleted!', 'success')
+    return redirect(url_for('home'))

@@ -32,7 +32,8 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              {% if current_user.is_authenticated %}
+              {% if current_user.is_authenticated %} <!--if current user is logged in, display certain links in navbar. else, display other links in navbar-->
+                <a class="nav-item nav-link" href="{{ url_for('new_post') }}">New Post</a> <!--this is a navbar button that calls the new_post method from the routes.py file when clicked-->
                 <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
               {% else %}
