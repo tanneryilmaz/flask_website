@@ -10,7 +10,9 @@ from flask_login import login_user, current_user, logout_user, login_required
 @app.route("/")
 @app.route("/home")
 def home():
-    posts = Post.query.all() #posts variable holds all of the posts from the database
+    '''in this function, we use the .paginate() method to split the posts into different pages'''
+    page = request.args.get('page', 1, type=int) #the page number is set to the variable 'page'. default value for page number is '1'
+    posts = Post.query.order_by(Post.date_posted.desc()).paginate(page = page, per_page = 5) #posts variable is a pagination object. it holds all of the posts from the database. The posts are ordered so the most recent one is shown first
     return render_template('home.html', posts=posts)
 
 @app.route("/about")
@@ -39,7 +41,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
-            #the user is logged in if there password in database matches the password they entered into the login form
+            #the user is logged in if their password in database matches the password they entered into the login form
             login_user(user, remember=form.remember.data)
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else (url_for('home'))
@@ -137,3 +139,14 @@ def delete_post(post_id):
     db.session.commit()
     flash('Your post has been deleted!', 'success')
     return redirect(url_for('home'))
+
+@app.route("/user/<string:username>")
+def user_post(username):
+    '''in this function, we use the .paginate() method to split the posts into different pages'''
+    page = request.args.get('page', 1, type=int) #the page number is set to the variable 'page'. default value for page number is '1'
+    user = User.query.filter_by(username=username).first_or_404()
+    posts = Post.query.filter_by(author=user)\
+        .order_by(Post.date_posted.desc())\
+        .paginate(page=page, per_page=5) #posts variable is a pagination object. it holds all of the posts from the database. The posts are ordered so the most recent one is shown first
+
+    return render_template('user_posts.html', posts=posts, user=user)

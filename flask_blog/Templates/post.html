@@ -7,7 +7,7 @@
       <!--the above image is the user's profile image. it is displayed next to their blog post-->
       <div class="media-body">
         <div class="article-metadata">
-          <a class="mr-2" href="#">{{ post.author.username }}</a> <!--displays author's username above post-->
+          <a class="mr-2" href=""{{url_for('user_post', username=post.author.username)}}"">{{ post.author.username }}</a> <!--displays author's username above post-->
           <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small> <!--displays the date of the post above post-->
 
             {% if post.author == current_user %}
@@ -22,7 +22,7 @@
       </div>
     </article>
 
-    <!-- This is a modal. When we try to delete a post, this asks us if we are sure we want to delete it --> 
+    <!-- This is a modal. When we try to delete a post, this asks us if we are sure we want to delete it -->
     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">

@@ -12,5 +12,12 @@ class which you defined in the routes.py file.
 -layout.html is where we define what happens when we click on a button. For example, if we click on the "new post" link in the navbar, we are
 redirected to the create_post.html page where we can create a new blog post.
 
+-The routes.py file contains many functions. Inside of these functions, we show the user the HTML template using url_for().
+We call these functions by using the following syntax: {{ url_for('delete_post', post_id=post.id) }}. This syntax call's the 'delete_post' method from
+the routes.py file and passes in post.id as the method's argument.
+
+-The pagination object called 'posts' in the route.py file holds all of the posts that are in our database. Storing the posts in this object makes it easier
+to access the posts in a way that allows us to make our homepage have different pages. 
+
 This is a blog I am building using Flask. I am using Corey Schafer's tutorials for guidance. A link to his tutorials is provided below:
 https://www.youtube.com/watch?v=MwZwr5Tvyxo
