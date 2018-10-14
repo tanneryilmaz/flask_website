@@ -1,8 +1,8 @@
 '''this file holds the models for our database. models are basically
 templates for database objects. For example, if I want to make a User object
 in a database, I will create a model to structure the User'''
-
-from flask_blog import db, login_manager
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask_blog import db, login_manager, app
 from datetime import datetime
 from flask_login import UserMixin
 
@@ -19,6 +19,18 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True) #grabs posts from the posts table by a specific author
 
+    def get_reset_token(self, expires_sec=1800):
+        s = Serializer(app.config['SECRET_KEY'], expires_sec)
+        return s.dumps({'user_id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_reset_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = s.loads(token)['user_id']
+        except:
+            return None
+        return User.query.get(user_id)
     def __repr__(self):
         '''this method defines how the object is printed'''
         return f"User('{self.username}','{self.email}','{self.image_file}')"
