@@ -155,8 +155,9 @@ def user_post(username):
 
 def send_reset_email(user): #sending email to user when they try to change their password
     token = user.get_reset_token()
+
     msg = Message('Password Reset Request',
-                  sender='noreply@demo.com',
+                  sender= os.environ.get('username'),
                   recipients=[user.email])
     msg.body = f'''To reset your password, visit the following link:
 {url_for('reset_token', token=token, _external=True)}

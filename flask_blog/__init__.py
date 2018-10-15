@@ -15,11 +15,17 @@ bcrypt = Bcrypt(app)
 login_manager=LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info' #adds a bootstrap style to the message that appears when we try to access a page that requires us to login
-app.config['MAIL_SERVER'] = 'smtp.googlemail.com' #these variables are used for sending emails to user
+app.config['MAIL_SERVER'] = 'smtp.gmail.com' #these variables are used for sending emails to user
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = #os.environ.get('EMAIL_USER')
-app.config['MAIL_PASSWORD'] = #os.environ.get('EMAIL_PASS')
+app.config['MAIL_USERNAME'] = os.environ.get('username') #os.environ.get('EMAIL_USER')
+app.config['MAIL_PASSWORD'] = os.environ.get('pass') #os.environ.get('EMAIL_PASS')
+
+
+
+
+
+
 mail = Mail(app)
 
 from flask_blog import routes
