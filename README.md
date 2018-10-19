@@ -1,5 +1,5 @@
 # flask_website
-Notes:
+Notes: This is a blog I am building using Flask. I am using Corey Schafer's tutorials for guidance. A link to his tutorials is provided below: https://www.youtube.com/watch?v=MwZwr5Tvyxo
 
 -Any time you want to make a new page for your website, you must add that page's route to your routes.py file. Then you must create an HTML template for
 that page in your Templates file. Then, if you want the page to have a form on it, you must create that form in the forms.py file. Then, you must import the form to your routes.py file and create an instance of the form in the route. Then, you must pass this instance into the render_template function as a parameter.
@@ -18,7 +18,8 @@ We call these functions by using the following syntax: {{ url_for('posts.delete_
 the routes.py file and passes in post.id as the method's argument.
 
 -The pagination object called 'posts' in the route.py file holds all of the posts that are in our database. Storing the posts in this object makes it easier
-to access the posts in a way that allows us to make our homepage have different pages. 
+to access the posts in a way that allows us to make our homepage have different pages.
 
-This is a blog I am building using Flask. I am using Corey Schafer's tutorials for guidance. A link to his tutorials is provided below:
-https://www.youtube.com/watch?v=MwZwr5Tvyxo
+-When you instantiate a blueprint, you can then pass routes to that blueprint instance. Then, when you create an app using the create_app() function, you register each of these blueprints with the instance of the app that you are creating. In my project, this is done in the flask_blog\__init__.py
+
+
