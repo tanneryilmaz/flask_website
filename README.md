@@ -18,7 +18,9 @@ We call these functions by using the following syntax: {{ url_for('delete_post',
 the routes.py file and passes in post.id as the method's argument.
 
 -The pagination object called 'posts' in the route.py file holds all of the posts that are in our database. Storing the posts in this object makes it easier
-to access the posts in a way that allows us to make our homepage have different pages. 
+to access the posts in a way that allows us to make our homepage have different pages.
+
+-When you instantiate a blueprint, you can then pass routes to that blueprint instance. Then, when you create an app using the create_app() function, you register each of these blueprints with the instance of the app that you are creating. In my project, this is done in the flask_blog\__init__.py
 
 This is a blog I am building using Flask. I am using Corey Schafer's tutorials for guidance. A link to his tutorials is provided below:
 https://www.youtube.com/watch?v=MwZwr5Tvyxo
