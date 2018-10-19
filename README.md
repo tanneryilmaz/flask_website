@@ -14,7 +14,7 @@ class which you defined in the routes.py file.
 redirected to the create_post.html page where we can create a new blog post.
 
 -The routes.py file contains many functions. Inside of these functions, we show the user the HTML template using url_for().
-We call these functions by using the following syntax: {{ url_for('delete_post', post_id=post.id) }}. This syntax call's the 'delete_post' method from
+We call these functions by using the following syntax: {{ url_for('posts.delete_post', post_id=post.id) }}. This syntax call's the 'posts.delete_post' method from
 the routes.py file and passes in post.id as the method's argument.
 
 -The pagination object called 'posts' in the route.py file holds all of the posts that are in our database. Storing the posts in this object makes it easier
