@@ -1,5 +1,5 @@
 # flask_website
-Notes: This is a blog I am building using Flask. I am using Corey Schafer's tutorials for guidance. A link to his tutorials is provided below: https://www.youtube.com/watch?v=MwZwr5Tvyxo
+Notes: This is a blog I am building using Flask. I am using Corey Schafer's tutorials for guidance. Almost all of the code in this repository was copied directly from Corey Schafer's youtube tutorial series. A link to his tutorial series is provided below: https://www.youtube.com/watch?v=MwZwr5Tvyxo
 
 -Any time you want to make a new page for your website, you must add that page's route to your routes.py file. Then you must create an HTML template for
 that page in your Templates file. Then, if you want the page to have a form on it, you must create that form in the forms.py file. Then, you must import the form to your routes.py file and create an instance of the form in the route. Then, you must pass this instance into the render_template function as a parameter.
